@@ -10,6 +10,8 @@ Anomaly detection prototype for standalone usage with the *Nicla Vision* board.
 
 > Project's original sketch
 
+### Areas of development
+
 The project's development will be split into 3 areas:
 * Connectivity
 * Exploring the boards sensors
