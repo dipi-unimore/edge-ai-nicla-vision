@@ -1,12 +1,12 @@
-import time 
-import wave  # for writing .wav files
-import threading 
-import os  # for filesystem problms
-import sys
+import time
+import threading
+import cv2
+import numpy as np
 import paho.mqtt.client as mqtt
 
-# ! change file format to save
-OUTPUT_FILE_PATH = '/home/otaviosb/Desktop/arduino-nicla-vision-playground/record_and_stream/recordings/video_recording.mjpeg'
+
+# save an .avi (container for mjpeg frames)
+OUTPUT_FILE_PATH = '/home/otaviosb/Desktop/arduino-nicla-vision-playground/record_and_stream/recordings/video_recording.avi'
 
 MQTT_HOST = 'localhost'
 MQTT_PORT = 1883
@@ -60,10 +60,46 @@ if total_bytes_copy == 0:
     print("**NO DATA RECEIVED**")
     print("check >> is the board running? >> is the broker running on the correct port?")
 else:
-   with open(OUTPUT_FILE_PATH, "wb") as f:
-    for chunk in chunks_copy:
-            f.write(chunk)
-    # ? how would we do these logs for simple raw mjpeg data?
-    # duration = len(audio_data) / (sample_rate * channels * sample_width)
-    # print(f"Saved {output_file}")
-    # print(f"Duration: {duration:.2f}s")
+    decoded_frames = []
+    target_size = None
+
+    # decode each MQTT payload as one JPEG frame and normalize any size mismatch.
+    for index, chunk in enumerate(chunks_copy, start=1):
+        frame = cv2.imdecode(np.frombuffer(chunk, dtype=np.uint8), cv2.IMREAD_COLOR)
+        if frame is None:
+            print(f"warning: skipped chunk {index} because it was not a valid JPEG frame")
+            continue
+
+        if target_size is None:
+            target_size = (frame.shape[1], frame.shape[0])
+        elif (frame.shape[1], frame.shape[0]) != target_size:
+            frame = cv2.resize(frame, target_size)
+
+        decoded_frames.append(frame)
+
+    if not decoded_frames:
+        print("**NO VALID FRAMES DECODED**")
+    else:
+        import os
+
+        out_dir = os.path.dirname(OUTPUT_FILE_PATH)
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
+
+        fps = max(1.0, len(decoded_frames) / RECORD_SECONDS)
+        writer = cv2.VideoWriter(
+            OUTPUT_FILE_PATH,
+            cv2.VideoWriter_fourcc(*'MJPG'),
+            fps,
+            target_size,
+        )
+
+        if not writer.isOpened():
+            print(f"ERROR: could not open video writer for '{OUTPUT_FILE_PATH}'")
+        else:
+            for frame in decoded_frames:
+                writer.write(frame)
+            writer.release()
+            print(f"Saved {OUTPUT_FILE_PATH}")
+            print(f"Frames written: {len(decoded_frames)}")
+            print(f"FPS used: {fps:.2f}")
