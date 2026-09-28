@@ -29,6 +29,16 @@ The design of the communication architecture can be seen below.
     <img src="./assets/mqtt.png"/>
 </p>
 
+## Boards streaming and recording
+
+The board comes equipped with a microphone and a camera. As a means to understand the connectivity and capabilities of those features, a streamer+recorder feature for both the microphone and camera was developed in the repo.
+
+The files inside the **"record_and_stream"** folder are responsible for those features, and work according to the following sketch:
+
+<p align="center">
+    <img src="./assets/microphone_flow_light.png"/>
+</p>
+
 ### Local broker
 
 As seen in our repo's *mqtt_pub.py* code, the broker may run on the same machine as the board, where it can subscribe to any topic of choice. This can be done running ``mosquitto_sub -h localhost -t "<topic-name>" -v`` on a terminal, and, in your code, connecting to your machine's local ip address.
