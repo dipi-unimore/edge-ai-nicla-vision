@@ -30,36 +30,69 @@ client.connect()
 CHANNELS = 1
 SIZE = 256 // (2 * CHANNELS)
 
-# audio's raw buffer storage
-raw_buf = None
 audio.init(channels=CHANNELS, frequency=16000, gain_db=24, highpass=0.9883)
 
-# ! APPLY QUEUE INTO THIS — CLEAR UP COMMENTARY
+# simple ring queue implementation. "ring" because indices wrap around when they reach the end; so we overwrite the same spots over and over. simplistic queue.
+QUEUE_CAPACITY = 2
+queue_slots = [None] * QUEUE_CAPACITY  # preallocated slots
+queue_head = 0
+queue_tail = 0
+queue_count = 0  # how many slots are filled
+queue_dropped = 0  # diagnostic counter for dropped chunks when full
+
+def queue_push(buf):
+    """Push a buffer reference into the queue.
+    Returns True if accepted, False if the queue was full (chunk dropped)."""
+    global queue_head, queue_count, queue_dropped
+    if queue_count < QUEUE_CAPACITY:
+        queue_slots[queue_head] = buf
+        # ? advance head to the next write index.
+        # ? (head + 1) % CAPACITY wraps to 0 when reaching CAPACITY-1,
+        # ? implementing the circular/ring behavior without resizing.
+        queue_head = (queue_head + 1) % QUEUE_CAPACITY
+        queue_count += 1
+        return True
+    else:
+        # queue full: drop newest chunk and increment log counter
+        queue_dropped += 1
+        print("queue dropped!")
+        return False
+
+
+def queue_pop():
+    """Pop the oldest buffer reference from the queue, or None if empty."""
+    global queue_tail, queue_count
+    if queue_count == 0:
+        return None
+    buf = queue_slots[queue_tail]
+    queue_slots[queue_tail] = None
+    # ? advance tail to the next read index; wrap-around logic as head.
+    # ? tail tracks the oldest filled slot. after reading it we move tail
+    # ? forward so the next pop reads the next-oldest slot.
+    queue_tail = (queue_tail + 1) % QUEUE_CAPACITY
+    queue_count -= 1
+    return buf
+
 # the mic driver fills the buffer and calls this function.
-# this is lacking a queue and might result in loss of data. the correct pattern needs to be:
-# 1. copy the buffer
-# 2. queue it
-# 3. process it in order
-# question: can this not result in audio laggy as fuck, from accumulated delays? answer: it can, but it's not too bad if low-latency is not a concern
+# this can result in small accumulated delays, but it's not a problem if low-latency is not a concern (our use-case). our queue fixes it anyhow.
 def audio_callback(buf):
     # NOTE: do Not call any function that allocates memory.
-    global raw_buf
-    if raw_buf is None:
-        raw_buf = buf
-
+    # push a reference into the queue. if the queue is full we drop the newest chunk and increment `queue_dropped` for logs
+    queue_push(buf)
 
 # start audio streaming. whenever we have a new chunk of data, the driver calls for audio_callback passing the buf param
 # this call initializes this system and audio_callback as the handler function.
 audio.start_streaming(audio_callback)
 
 while True:
-    if raw_buf is not None:
-        # converts raw raw data to signed 2byte chunks
-        pcm_buf = np.frombuffer(raw_buf, dtype=np.int16)
+    # pop oldest available buffer and process it.
+    buf = queue_pop()
+    if buf is not None:
+        # convert raw data (bytes-like) to int16 and publish
+        pcm_buf = np.frombuffer(buf, dtype=np.int16)
         payload = pcm_buf.tobytes()
         client.publish("openmv/raw-microphone-data", payload)
         print(payload)
-        raw_buf = None
 
 # Stop streaming
 audio.stop_streaming()
