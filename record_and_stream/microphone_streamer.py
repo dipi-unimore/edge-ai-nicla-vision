@@ -6,6 +6,7 @@ from ulab import utils
 # -------- network + mqtt --------- #
 import network
 from mqtt import MQTTClient
+# import paho.mqtt.client as mqtt
 
 SSID = "iphonesb"  # Network SSID
 KEY = "localnetwork-key"  # Network key
@@ -33,7 +34,7 @@ SIZE = 256 // (2 * CHANNELS)
 raw_buf = None
 audio.init(channels=CHANNELS, frequency=16000, gain_db=24, highpass=0.9883)
 
-
+# ! APPLY QUEUE INTO THIS — CLEAR UP COMMENTARY
 # the mic driver fills the buffer and calls this function.
 # this is lacking a queue and might result in loss of data. the correct pattern needs to be:
 # 1. copy the buffer
