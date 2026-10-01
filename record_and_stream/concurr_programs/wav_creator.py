@@ -29,7 +29,7 @@ def on_message(client, userdata, msg):
     print(f"received {len(msg.payload)} bytes (total: {total_bytes})")
 
 
-# ----- mqtt client code -----
+# * ----- mqtt client code -----
 client = mqtt.Client()
 client.on_message = on_message
 # connect to broker (synchronous network operation)
@@ -44,7 +44,7 @@ time.sleep(RECORD_SECONDS)
 # leave the loop
 client.loop_stop()
 client.disconnect()
-# ----------
+# * --------------------------
 
 # copy accumulated data under lock before processing to avoid races
 # "with lock" locks this thread and exits it after processing inside finishes

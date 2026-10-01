@@ -4,7 +4,6 @@ import cv2
 import numpy as np
 import paho.mqtt.client as mqtt
 
-
 # save an .avi (container for mjpeg frames)
 OUTPUT_FILE_PATH = '/home/otaviosb/Desktop/arduino-nicla-vision-playground/record_and_stream/recordings/video_recording.avi'
 

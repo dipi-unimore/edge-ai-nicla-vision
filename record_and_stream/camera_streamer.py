@@ -69,8 +69,7 @@ def queue_pop():
     queue_count -= 1
     return buf
 
-
-# ? what to do with code below? we currently "stream" via while True. do we NEED a video_streamer callback?
+# * queue is, as of now, useless and has been removed
 # # the mic driver fills the buffer and calls this function.
 # def audio_callback(buf):
 #     # NOTE: do Not call any function that allocates memory.
@@ -84,7 +83,6 @@ def queue_pop():
 try:
     while True:
         # pop oldest available buffer and process it.
-        # ! do we need a video_streamer_handler for the usage of the queue?
         # buf = queue_pop()
         # if buf is not None:
         clock.tick()
