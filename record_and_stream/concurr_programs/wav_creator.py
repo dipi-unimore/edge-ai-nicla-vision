@@ -18,7 +18,8 @@ audio_chunks = []
 total_bytes = 0
 lock = threading.Lock()
 
-
+# todo: internal publish + sub -> keep a q (also for the receiver)
+# this allow for faster reading (and module the tC)
 def on_message(client, userdata, msg):
     """Called when an MQTT message arrives. We append raw payload bytes."""
     global total_bytes

@@ -91,7 +91,6 @@ try:
             pcm_buf = np.frombuffer(buf, dtype=np.int16)
             payload = pcm_buf.tobytes()
             client.publish("openmv/raw-microphone-data", payload)
-            print(payload)
 # does not stop code execution as intended (check later)
 except KeyboardInterrupt:
     pass
