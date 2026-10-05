@@ -65,6 +65,28 @@ Implementing intelligence.
 * Then, we will move such intelligence to the board, using TinyML.
 * Finally, we aim to make this a dynamic approach with the board (currently open topic for discussion).
 
+# How to run camera-capture-opencv
+
+This program captures video from your webcam and runs YOLOv8n object detection on each frame.
+
+## Setup and Installation
+
+1. **Create and activate a virtual environment:**
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the program:**
+   ```bash
+   python3 intelligence/camera-capture-opencv.py
+   ```
+
 # Notes
 * This repository intentionally keeps intermediate code as part of the research trail, as a means of registering the building process towards our final project. The file names and this documentation will always reflect this choice.
 
