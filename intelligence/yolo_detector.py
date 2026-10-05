@@ -1,14 +1,16 @@
-"""cv camera capture simplest loop:
-- initializes camera using cv2.VideoCapture(0)
-- runsa while true that gets cv2.VideoCapture(0).read() (this captures each and every frame)
-- shows the image using cv2.imshow('<desired-name-of-window>', frame)
+"""YOLO Object Detection with Webcam
+Captures video from webcam and runs YOLOv8n object detection.
 
-initializing the model and running it:
-- import YOLO 
+Features:
+- Initializes camera using cv2.VideoCapture(0)
+- Captures each frame in a loop
+- Runs YOLOv8n inference on each frame
+- Draws bounding boxes around detected objects
+- Displays results in real-time window
 
 USAGE:
 source .venv/bin/activate
-python3 intelligence/camera-capture-opencv.py
+python3 intelligence/yolo_detector.py
 """
 
 # * futurally, implement stuff to make code "better" such as:
