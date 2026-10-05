@@ -23,6 +23,9 @@ import cv2
 from ultralytics import YOLO
 import torch
 import numpy as np
+from mqtt import MQTTClient
+
+client = MQTTClient("openmv", "172.20.10.14", port=1883)
 
 # defaults tensor values for standardization
 def tensor_to_numpy(x):
@@ -30,11 +33,8 @@ def tensor_to_numpy(x):
             return x.detach().cpu().numpy()
     return np.array(x)
 
-# draws rectangles over every detected object (no labels or ids yet)
+# draws rectangles with labels (missing confidence scores)
 def draw_detections(frame, results, model):
-    # used for logging all returned attrs
-    print(results)
-
     # 'results' is a single result instance
     boxes = getattr(results, "boxes", None)
     if boxes is None:
@@ -44,38 +44,47 @@ def draw_detections(frame, results, model):
     if xyxy is None:
             return frame, []
     xyxy = tensor_to_numpy(xyxy)
+    cls = getattr(boxes, "cls", None)
 
+    detections = []
     new_img = frame
-    for coords in xyxy:
+    for i, coords in enumerate(xyxy):
         xmin, ymin, xmax, ymax = map(int, coords)
-        new_img = cv2.rectangle(new_img, (xmin, ymin), (xmax, ymax), (16, 160, 16), 2)
+        # gets the actual name of the detected object
+        class_id = int(cls[i])
+        label = model.names.get(class_id, str(class_id)) if hasattr(model, 'names') else str(class_id)
+        t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)[0]
+        cv2.rectangle(new_img, (xmin, ymin-15), (xmin+t_size[0], ymin), (16, 160, 16), -1)
+        cv2.rectangle(new_img, (xmin, ymin), (xmax, ymax), (16, 160, 16), 2)
+        cv2.putText(new_img, label, (xmin, ymin-4), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
-    return new_img
+        detections.append({
+            "label": label,
+            "class_id": class_id,
+            "coords": [xmin, ymin, xmax, ymax] 
+        })
+
+    return new_img, detections
 
     
 def main():
     vidCap = cv2.VideoCapture(0)
     model = YOLO('yolov8n.pt')
-
     if not vidCap.isOpened():
         raise RuntimeError("couldn't open webcam (index 0)")
-
-    count = 0
-
-    while count < 1:
+    
+    while True:
         ok, frame = vidCap.read()
-
         if not ok:
-                    break
-        
+            break      
         results = model(frame)[0]
-        # gets the new_img with drawed rectangles
-        new_img = draw_detections(frame, results, model)
-
+        new_img, detections = draw_detections(frame, results, model)
         cv2.imshow('webcam', new_img)
+        client.publish("openmv/yolov8n",detections)
         # we have to run this to actually loop the function
-        cv2.waitKey(1)
-        count += 1
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord('q'):
+            break
 
 if __name__ == '__main__':
     main()
