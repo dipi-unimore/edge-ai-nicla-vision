@@ -1,7 +1,8 @@
 # Nicla Vision Anomaly Detection
 <p align="center">
-    <img style="height: 50px" src="./assets/logo_bianco.svg"/>
-    <img style="height: 50px; margin-left: 50px" src="./assets/dipi.png"/>
+    <img style="height: 80px" src="./assets/logo_bianco.svg"/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <img style="height: 80px" src="./assets/dipi.png"/>
 </p>
 This project aims to implement anomaly detection using the Nicla Vision board.
 
