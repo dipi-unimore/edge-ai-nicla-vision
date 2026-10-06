@@ -23,9 +23,18 @@ import cv2
 from ultralytics import YOLO
 import torch
 import numpy as np
-from mqtt import MQTTClient
+import paho.mqtt.client as mqtt
+import json
 
-client = MQTTClient("openmv", "172.20.10.14", port=1883)
+mqttc = mqtt.Client(client_id="openmv")
+
+# connect to MQTT broker with error handling
+try:
+    mqttc.connect("localhost", 1883, keepalive=60)
+    mqttc.loop_start()
+    print("connected to MQTT broker")
+except Exception as e:
+    print(f"could not connect to MQTT broker: {e}")
 
 # defaults tensor values for standardization
 def tensor_to_numpy(x):
@@ -50,14 +59,16 @@ def draw_detections(frame, results, model):
     new_img = frame
     for i, coords in enumerate(xyxy):
         xmin, ymin, xmax, ymax = map(int, coords)
-        # gets the actual name of the detected object
+        # class id from the detected object
         class_id = int(cls[i])
         label = model.names.get(class_id, str(class_id)) if hasattr(model, 'names') else str(class_id)
+        # places text and draws rectangle over detected object's box
         t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)[0]
         cv2.rectangle(new_img, (xmin, ymin-15), (xmin+t_size[0], ymin), (16, 160, 16), -1)
         cv2.rectangle(new_img, (xmin, ymin), (xmax, ymax), (16, 160, 16), 2)
         cv2.putText(new_img, label, (xmin, ymin-4), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
+        # payload to be transmitted via broker
         detections.append({
             "label": label,
             "class_id": class_id,
@@ -80,7 +91,7 @@ def main():
         results = model(frame)[0]
         new_img, detections = draw_detections(frame, results, model)
         cv2.imshow('webcam', new_img)
-        client.publish("openmv/yolov8n",detections)
+        mqttc.publish("openmv/yolov8n", json.dumps(detections))
         # we have to run this to actually loop the function
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
