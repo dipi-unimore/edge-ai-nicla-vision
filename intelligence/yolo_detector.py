@@ -14,15 +14,10 @@ source .venv/bin/activate
 python3 intelligence/yolo_detector.py
 """
 
-# * futurally, implement stuff to make code "better" such as:
-# try:
-#     from ultralytics import YOLO
-# except Exception as e:
-#     raise SystemExit("ultralytics missing, run: pip install ultralytics")
+# todo: better structure (no logic change). must revisit!
 
 import cv2
 from ultralytics import YOLO
-import numpy as np
 import paho.mqtt.client as mqtt
 import json
 
