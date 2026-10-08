@@ -24,22 +24,22 @@
 This repo currently contains:
 - **basics** folder, containing steps taken to understand board's sensors and mqtt broker
 - **record_and_stream** folder, containing functional streaming and recording flows of both camera and microphone
-- **intelligence** folder, containing the development of machine vision and anomaly detection using OpenCV and YOLOv8n, and the development of audio recording and melspectrogram generation using sounddevice and librosa, alongside with the development of a keyword spotting (KWS) model for 10 different words.
+- **intelligence** folder, containing the development of machine vision (object detection) using OpenCV and YOLOv8n, and the development of audio recording and melspectrogram generation using sounddevice and librosa, alongside with the development of a keyword spotting (KWS) model for 10 different words.
 
 <!-- TODO: reorganize folder structure -->
 
 ## Research path
 
 <p align="center">
-    <img style="height: 500px" src="./assets/sketch.jpeg"/>
+    <img height="500px" alt="Project's original sketch" src="./assets/sketch.jpeg"/>
 </p>
-
-> Project's original sketch
 
 The project's development has been split into 4 phases:
 - [x] Connectivity
 - [x] Boards sensors and streaming
 - [x] Intelligence
+    - [x] Object detection (YOLOv8n)
+    - [ ] Keyword spotting model (tensorflow)
 - [ ] Board integration
 
 ### Connectivity
@@ -86,7 +86,7 @@ The development of intelligence in the project is split into 2 main different ph
 #### Video
 Video intelligence on the machine has been developed using openCV, an open-source library for real-time computer vision and image processing. The model used was YOLOv8n, specifically chosen for its small size and interesting didactic value.
 
-The demo *yolo_detector.py* can be seen inside the intelligence folder and it describes the implementation of object detection and classification with boundind boxes, labels and confidence scores over the YOLOv8n model.
+The demo *yolo_detector.py* can be seen inside the intelligence folder and it describes the implementation of object detection and classification with bounding boxes, labels and confidence scores over the YOLOv8n model.
 
 #### Audio
 Audio intelligence on the machine is currently undergoing development.
