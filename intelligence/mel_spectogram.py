@@ -1,9 +1,15 @@
 """Audio recorder using sounddevice and melspectogram generator using librosa.
 Intermediary step between audio fundamentals and audio model classification for KWS.
 
+How to read a melspectogram:
+- X axis is time, Y axis is frequency, and color is energy (loudness in dB at that time and frequency).
+- Horizontal lines are sustained tones, such as a hum or a held vowel
+- Vertical streaks are short events like claps, clicks, and the "t" or "k" in speech
+- Diffuse smears across many rows are noise-like sounds: "s", "sh", breathing, fan noise.
+
 Usage:
-python intelligence/kws.py out.wav -s 16000 -c 1 -d 5
-python intelligence/kws.py --list-devices
+source .venv/bin/activate
+python intelligence/mel_spectogram.py
 """
 
 import numpy as np
@@ -13,6 +19,7 @@ import cv2
 
 def record_audio(duration, sr):
     print(f"Recording {duration}s audio...")
+    # change device number depending on machine configuration.
     rec = sd.rec(int(duration * sr), samplerate=sr, channels=1, device=4)
     sd.wait()
     return rec.flatten(), sr
