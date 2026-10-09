@@ -42,11 +42,22 @@ nicla-vision-anomaly-detection/
 
 ```mermaid
 flowchart LR
-    A["Foundations<br/>MQTT + sensor streaming"]:::done --> B["Vision prototype<br/>YOLOv8n on desktop"]:::done
-    B --> C["Detector refinement<br/>new features"]:::active
-    C --> D["On-board vision<br/>export + inference on Nicla"]:::planned
-    D --> E["Audio<br/>keyword spotting"]:::planned
-    E --> F["Anomaly detection<br/>vision + audio on board"]:::planned
+    F["Foundations<br/>MQTT + sensor streaming"]:::done
+
+    subgraph V ["Vision pipeline"]
+        V1["Vision prototype<br/>YOLOv8n on desktop"]:::done --> V2["Detector refinement<br/>new features"]:::active --> V3["On-board vision<br/>export + inference on Nicla"]:::planned
+    end
+
+    subgraph A ["Audio pipeline"]
+        A1["Audio prototype<br/>recording + melspectrogram"]:::done --> A2["Keyword spotting<br/>model training"]:::planned --> A3["On-board audio<br/>inference on Nicla"]:::planned
+    end
+
+    G["Anomaly detection<br/>vision + audio on board"]:::planned
+
+    F --> V1
+    F --> A1
+    V3 --> G
+    A3 --> G
 
     classDef done fill:#1f6feb,color:#fff,stroke:#1f6feb
     classDef active fill:#f0883e,color:#fff,stroke:#f0883e
@@ -55,12 +66,9 @@ flowchart LR
 
 <sub>Solid blue: completed · Orange: in development · Dashed: planned</sub>
 
-<details>
-<summary>the original project sketch</summary>
-
 <p align="center">
-    <img height="400px" alt="Original project sketch" src="./assets/sketch.jpeg"/>
-    <br/><em>Initial concept. The roadmap above reflects how the plan has evolved since.</em>
+    <img height="450px" alt="Original project sketch" src="./assets/sketch.jpeg"/>
+    <br/><em>Project's initial concept</em>
 </p>
 
 ## Documentation
