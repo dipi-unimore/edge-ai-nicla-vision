@@ -20,6 +20,10 @@ import cv2
 from ultralytics import YOLO
 import paho.mqtt.client as mqtt
 import json
+from pathlib import Path
+
+# reliable path resolving independent of where code is run from
+MODEL_PATH = Path(__file__).resolve().parents[2] / "models" / "yolov8n.pt" 
 
 def setup_mqtt():
     mqttc = mqtt.Client(client_id="openmv")
@@ -79,7 +83,7 @@ def draw_detections(frame, results, model):
     
 def main():
     vidCap = cv2.VideoCapture(0)
-    model = YOLO('yolov8n.pt')
+    model = YOLO(MODEL_PATH)
     mqttc = setup_mqtt()
 
     if not vidCap.isOpened():
