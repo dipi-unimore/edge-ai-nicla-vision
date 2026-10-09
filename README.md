@@ -6,98 +6,76 @@
     <img height="80" alt="DIPI Logo" src="./assets/dipi.png"/>
 </p>
 
-**Status:** desktop development phase (YOLOv8n object detection and a keyword-spotting model). Deployment to the board is the next phase.
+**Status:** development of intelligence exploratory phase (YOLOv8n).
+
+<!-- ! add a GIF here showing the board doing object vision -->
 
 ## Table of Contents
 
 - [Current status](#current-status)
-- [Research path](#research-path)
-  - [Connectivity](#connectivity)
-  - [Sensors and streaming](#sensors-and-streaming)
-  - [Intelligence](#intelligence)
-  - [Board integration](#board-integration)
+- [Roadmap](#roadmap)
+- [Documentation](#documentation)
 - [How to run the demos](#how-to-run-the-demos)
 - [Authorship](#authorship)
 
-## Current status
+## Structure of the project
 
-This repo currently contains:
-- **basics** folder, containing steps taken to understand board's sensors and mqtt broker
-- **record_and_stream** folder, containing functional streaming and recording flows of both camera and microphone
-- **intelligence** folder, containing the development of machine vision (object detection) using OpenCV and YOLOv8n, and the development of audio recording and melspectrogram generation using sounddevice and librosa, alongside with the development of a keyword spotting (KWS) model for 10 different words.
+```text
+nicla-vision-anomaly-detection/
+├── board/                  # MicroPython, runs on the Nicla (deployed via OpenMV IDE)
+│   ├── examples/           # sensor and MQTT basics
+│   ├── streaming/          # camera and microphone streamers
+│   ├── vision/             # [planned] on-board inference (TinyML)
+│   └── audio/              # [planned] on-board keyword spotting
+├── host/                   # CPython, runs on the PC
+│   ├── receivers/          # MQTT subscribers that save video/audio
+│   ├── vision/             # YOLOv8n object detection
+│   └── audio/              # [planned] melspectrogram and keyword spotting
+├── models/                 # [planned] trained/downloaded weights
+├── tools/                  # helper scripts
+├── recordings/             # output of the receivers (gitignored)
+├── docs/                   # detailed documentation
+└── assets/                 # images and GIFs for the docs
+```
 
-<!-- TODO: reorganize folder structure -->
+## Roadmap
 
-## Research path
+```mermaid
+flowchart LR
+    A["<b>Foundations</b><br/>MQTT + sensor streaming"]:::done --> B["<b>Vision prototype</b><br/>YOLOv8n on desktop"]:::done
+    B --> C["<b>Detector refinement</b><br/>new features"]:::active
+    C --> D["<b>On-board vision</b><br/>export + inference on Nicla"]:::planned
+    D --> E["<b>Audio</b><br/>keyword spotting"]:::planned
+    E --> F["<b>Anomaly detection</b><br/>vision + audio on board"]:::planned
 
-<p align="center">
-    <img height="500px" alt="Project's original sketch" src="./assets/sketch.jpeg"/>
-</p>
+    classDef done fill:#1f6feb,color:#fff,stroke:none
+    classDef active fill:#f0883e,color:#fff,stroke:none
+    classDef planned fill:#21262d,color:#c9d1d9,stroke:#6e7681,stroke-dasharray:4
+```
 
-The project's development has been split into 4 phases:
-- [x] Connectivity
-- [x] Boards sensors and streaming
-- [x] Intelligence
-    - [x] Object detection (YOLOv8n)
-    - [ ] Keyword spotting model (tensorflow)
-- [ ] Board integration
+<sub>Solid blue: completed · Orange: in development · Dashed: planned</sub>
 
-### Connectivity
-
-The board comes equipped with an antenna, and can connect to Bluetooth and WiFi. For our project, we chose to use MQTT and the [*Mosquitto*](https://mosquitto.org/) broker to subscribe and publish messages.
-
-The design of the communication architecture can be seen below.
-
-<p align="center">
-    <img src="./assets/mqtt.png"/>
-</p>
-
-#### MQTT setup
-
-##### Local broker
-
-As seen in our repo's *mqtt_pub.py* code, the broker may run on the same machine as the board, where it can subscribe to any topic of choice. This can be done running ``mosquitto_sub -h localhost -t "<topic-name>" -v`` on a terminal, and, in your code, connecting to your machine's local ip address.
-
-##### External broker
-
-To connect to a broker already running in a different machine, you'd connect to their local IP address (if the board and the machine are on the same WiFi), or you'd connect to their public IP or domain (if they are running on different connections), as can be seen on the example below.
-
-> ``client = MQTTClient("openmv", "broker.university.edu", port=1883)``  
-> ``client.connect()``
-
-### Sensors and streaming
-
-The board comes equipped with a microphone and a camera. As a means to understand the connectivity and capabilities of those features, a streamer+recorder feature for both the microphone and camera was developed in the repo.
-
-The files inside the **"record_and_stream"** folder are responsible for those features, and work according to the following sketch:
+<details>
+<summary>the original project sketch</summary>
 
 <p align="center">
-    <img src="./assets/microphone_flow_light.png"/>
+    <img height="400px" alt="Original project sketch" src="./assets/sketch.jpeg"/>
+    <br/><em>Initial concept. The roadmap above reflects how the plan has evolved since.</em>
 </p>
 
-As can be seen by the sketch, the flow works via 2 concurrent programs. One of them runs from the board and aims to capture and send sensor data in real-time.
-The other aims to capture such data through the broker connection and save that data into a playable file on the repo.
+## Documentation
 
-### Intelligence
-The development of intelligence in the project is split into 2 main different phases. A development phase on a desktop machine using YOLOv8n/openCV for video and librosa/tensorflow for audio, and an integration phase into the board using TinyML[^1]
+Each phase of the project is documented in detail on its own page:
 
-[^1]: This has yet to be confirmed.
-
-#### Video
-Video intelligence on the machine has been developed using openCV, an open-source library for real-time computer vision and image processing. The model used was YOLOv8n, specifically chosen for its small size and interesting didactic value.
-
-The demo *yolo_detector.py* can be seen inside the intelligence folder and it describes the implementation of object detection and classification with bounding boxes, labels and confidence scores over the YOLOv8n model.
-
-#### Audio
-Audio intelligence on the machine is currently undergoing development.
-
-As of now, audio recording and melspectrogram plotting has been implemented and can be seen described on the script *mel_spectrogram.py*, inside the intelligence folder. The libs used were sounddevice for audio recording and librosa for melspectrogram plotting.
-
-### Board integration
-> In the future!
+| Phase | Description | Doc |
+|-------|-------------|-----|
+| Connectivity | MQTT architecture, local and external brokers | [docs/connectivity.md](docs/connectivity.md) |
+| Sensors and streaming | Camera and microphone recording and streaming | [docs/streaming.md](docs/streaming.md) |
+| Intelligence | YOLOv8n object detection, melspectrograms, keyword spotting | [docs/intelligence.md](docs/intelligence.md) |
 
 ## How to run the demos
 
+From root folder:
 1. **Initialize the virtual environment:**
    ```bash
    python3 -m venv .venv
@@ -106,7 +84,7 @@ As of now, audio recording and melspectrogram plotting has been implemented and 
 
 2. **Install dependencies:**
    ```bash
-   pip install -r requirements.txt
+   pip install -r host/requirements.txt
    ```
 
 ### `yolo_detector.py`
@@ -114,7 +92,7 @@ As of now, audio recording and melspectrogram plotting has been implemented and 
 Captures video from your webcam and runs YOLOv8n object detection on each frame, drawing bounding boxes around detected objects.
 
 ```bash
-python3 intelligence/yolo_detector.py
+python3 host/vision/yolo_detector.py
 ```
 
 ### `mel_spectrogram.py`
@@ -122,7 +100,7 @@ python3 intelligence/yolo_detector.py
 Records audio from your device and plots a melspectrogram based on the acquired audio.
 
 ```bash
-python3 intelligence/mel_spectrogram.py
+python3 host/audio/mel_spectrogram.py
 ```
 
 ### `mjpeg_creator.py`
@@ -133,10 +111,10 @@ Receives video frames via MQTT from the Nicla Vision board and saves them as an 
 > Make sure the board is running `camera_streamer.py` and publishing video frames to the MQTT topic.
 
 ```bash
-python3 record_and_stream/concurr_programs/mjpeg_creator.py
+python3 host/receivers/mjpeg_creator.py
 ```
 
-The recorded video will be saved to `record_and_stream/recordings/video_recording.avi`.
+The recorded video will be saved to `recordings/video_recording.avi`.
 
 ### `wav_creator.py`
 
@@ -147,7 +125,7 @@ Receives audio data via MQTT from the Nicla Vision board and saves it as a WAV a
 
 
 ```bash
-python3 record_and_stream/concurr_programs/wav_creator.py
+python3 host/receivers/wav_creator.py
 ```
 
 The recorded audio will be saved to `record_and_stream/recordings/recording.wav`.
