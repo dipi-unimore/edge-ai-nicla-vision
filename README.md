@@ -42,15 +42,15 @@ nicla-vision-anomaly-detection/
 
 ```mermaid
 flowchart LR
-    A["<b>Foundations</b><br/>MQTT + sensor streaming"]:::done --> B["<b>Vision prototype</b><br/>YOLOv8n on desktop"]:::done
-    B --> C["<b>Detector refinement</b><br/>new features"]:::active
-    C --> D["<b>On-board vision</b><br/>export + inference on Nicla"]:::planned
-    D --> E["<b>Audio</b><br/>keyword spotting"]:::planned
-    E --> F["<b>Anomaly detection</b><br/>vision + audio on board"]:::planned
+    A["Foundations<br/>MQTT + sensor streaming"]:::done --> B["Vision prototype<br/>YOLOv8n on desktop"]:::done
+    B --> C["Detector refinement<br/>new features"]:::active
+    C --> D["On-board vision<br/>export + inference on Nicla"]:::planned
+    D --> E["Audio<br/>keyword spotting"]:::planned
+    E --> F["Anomaly detection<br/>vision + audio on board"]:::planned
 
-    classDef done fill:#1f6feb,color:#fff,stroke:none
-    classDef active fill:#f0883e,color:#fff,stroke:none
-    classDef planned fill:#21262d,color:#c9d1d9,stroke:#6e7681,stroke-dasharray:4
+    classDef done fill:#1f6feb,color:#fff,stroke:#1f6feb
+    classDef active fill:#f0883e,color:#fff,stroke:#f0883e
+    classDef planned fill:#21262d,color:#c9d1d9,stroke:#6e7681
 ```
 
 <sub>Solid blue: completed · Orange: in development · Dashed: planned</sub>
