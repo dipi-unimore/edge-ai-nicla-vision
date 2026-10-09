@@ -5,7 +5,7 @@ import os  # for filesystem problms
 import sys
 import paho.mqtt.client as mqtt
 
-OUTPUT_FILE_PATH = '/home/otaviosb/Desktop/arduino-nicla-vision-playground/record_and_stream/recordings/recording.wav'
+OUTPUT_FILE_PATH = '/home/otaviosb/Desktop/arduino-nicla-vision-playground/recordings/recording.wav'
 MQTT_HOST = 'localhost'
 MQTT_PORT = 1883
 MQTT_TOPIC = 'openmv/raw-microphone-data'
