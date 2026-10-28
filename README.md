@@ -1,5 +1,5 @@
 # Edge AI on the Arduino Nicla Vision
-> Audio and vision intelligence for IoT: MQTT connectivity, camera and microphone streaming, object detection (YOLOv8n) and keyword spotting, with the end goal of running the models directly on the board (TinyML).
+> Audio and vision intelligence for IoT: object detection and keyword spotting on the Nicla Vision board.
 <p align="center">
     <img height="80" alt="UNIMORE Logo" src="./assets/logo_bianco.svg"/>
     &emsp;&emsp;
