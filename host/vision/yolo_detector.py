@@ -22,8 +22,8 @@ import paho.mqtt.client as mqtt
 import json
 from pathlib import Path
 
-# reliable path resolving independent of where code is run from
-MODEL_PATH = Path(__file__).resolve().parents[2] / "models" / "yolov8n.pt" 
+# change based on desire model to run
+MODEL_PATH = Path(__file__).resolve().parents[2] / "models" / "soda_caps_best.pt"
 
 def setup_mqtt():
     mqttc = mqtt.Client(client_id="openmv")
