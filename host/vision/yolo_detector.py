@@ -24,6 +24,8 @@ from pathlib import Path
 
 # change based on desire model to run
 MODEL_PATH = Path(__file__).resolve().parents[2] / "models" / "soda_caps_best.pt"
+# detections below this confidence are dropped (higher = fewer false positives, but more missed objects)
+CONF_THRESHOLD = 0.5
 
 def setup_mqtt():
     mqttc = mqtt.Client(client_id="openmv")
@@ -94,7 +96,7 @@ def main():
         if not ok:
             break    
 
-        results = model(frame)[0]
+        results = model(frame, conf=CONF_THRESHOLD)[0]
         new_img, detections = draw_detections(frame, results, model)
         cv2.imshow('webcam', new_img)
 
