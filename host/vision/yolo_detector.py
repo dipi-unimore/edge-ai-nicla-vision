@@ -23,7 +23,7 @@ import json
 from pathlib import Path
 
 # change based on desire model to run
-MODEL_PATH = Path(__file__).resolve().parents[2] / "models" / "negatives_included" / "soda_caps_best.pt"
+MODEL_PATH = Path(__file__).resolve().parents[2] / "models" / "soda_caps_best.pt"
 # detections below this confidence are dropped (higher = fewer false positives, but more missed objects)
 CONF_THRESHOLD = 0.5
 
