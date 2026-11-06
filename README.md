@@ -1,12 +1,14 @@
 # Edge AI on the Arduino Nicla Vision
+
 > Audio and vision intelligence for IoT: object detection and keyword spotting on the Nicla Vision board.
+
 <p align="center">
     <img height="80" alt="UNIMORE Logo" src="./assets/logo_bianco.svg"/>
     &emsp;&emsp;
     <img height="80" alt="DIPI Logo" src="./assets/dipi.png"/>
 </p>
 
-**Status:** development of intelligence exploratory phase (YOLOv8n).
+**Status:** working on the port of the FOMO model to the Nicla Vision board.
 
 <!-- ! add a GIF here showing the board doing object vision -->
 
@@ -75,16 +77,18 @@ flowchart LR
 
 Each phase of the project is documented in detail on its own page:
 
-| Phase | Description | Doc |
-|-------|-------------|-----|
-| Connectivity | MQTT architecture, local and external brokers | [docs/connectivity.md](docs/connectivity.md) |
-| Sensors and streaming | Camera and microphone recording and streaming | [docs/streaming.md](docs/streaming.md) |
-| Intelligence | YOLOv8n object detection, melspectrograms, keyword spotting | [docs/intelligence.md](docs/intelligence.md) |
+| Phase                 | Description                                                 | Doc                                          |
+| --------------------- | ----------------------------------------------------------- | -------------------------------------------- |
+| Connectivity          | MQTT architecture, local and external brokers               | [docs/connectivity.md](docs/connectivity.md) |
+| Sensors and streaming | Camera and microphone recording and streaming               | [docs/streaming.md](docs/streaming.md)       |
+| Intelligence          | YOLOv8n object detection, melspectrograms, keyword spotting | [docs/intelligence.md](docs/intelligence.md) |
 
 ## How to run the demos
 
 From root folder:
+
 1. **Initialize the virtual environment:**
+
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
@@ -131,7 +135,6 @@ Receives audio data via MQTT from the Nicla Vision board and saves it as a WAV a
 > [!IMPORTANT]
 > Make sure the board is running `microphone_streamer.py` and publishing audio data to the MQTT topic.
 
-
 ```bash
 python3 host/receivers/wav_creator.py
 ```
@@ -139,5 +142,6 @@ python3 host/receivers/wav_creator.py
 The recorded audio will be saved to `record_and_stream/recordings/recording.wav`.
 
 ## Authorship
-* Development: [Otávio Sbampato Andrade](https://github.com/otaviosbampato)
-* Advisor: [Marco Picone](https://github.com/piconem)
+
+- Development: [Otávio Sbampato Andrade](https://github.com/otaviosbampato)
+- Advisor: [Marco Picone](https://github.com/piconem)
