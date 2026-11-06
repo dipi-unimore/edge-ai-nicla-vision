@@ -104,7 +104,7 @@ def main(epochs=EPOCHS, imgsz=IMGSZ, batch=BATCH, project=None):
     )
 
     save_dir = Path(model.trainer.save_dir)
-    # best.pt = weights from the best epoch (not necessarily the last one; in our run, epoch 28 of 58)
+    # best.pt = weights from the best epoch (not necessarily the last one; in our run, epoch 30 of 58)
     best = save_dir / "weights" / "best.pt"
     print(f"best weights: {best}")
 
