@@ -11,7 +11,7 @@
 **Status:** FOMO detection of blue and red caps runs on the board, with no network needed. Keyword spotting is in development.
 
 <p align="center">
-    <img src="../assets/nicla-detections.gif width="600"/>
+    <img src="./assets/nicla-detections.gif" width="600"/>
     <br/><em>Live detection of the blue and red caps</em>
 </p>
 
