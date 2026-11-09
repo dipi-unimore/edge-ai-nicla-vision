@@ -11,7 +11,8 @@
 **Status:** FOMO detection of blue and red caps runs on the board, with no network needed. Keyword spotting is in development.
 
 <p align="center">
-    <!-- 📸 GIF: fomo_viewer window showing boxes and centroids from the board -->
+    <img src="../assets/nicla-detections.gif width="600"/>
+    <br/><em>Live detection of the blue and red caps</em>
 </p>
 
 **Quick links:** [Board demo: detection on the Nicla](docs/board-fomo.md) · [Documentation](#documentation) · [Project structure](#project-structure)
