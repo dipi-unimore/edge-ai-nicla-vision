@@ -1,11 +1,12 @@
 import time
 import threading
+from pathlib import Path
 import cv2
 import numpy as np
 import paho.mqtt.client as mqtt
 
-# save an .avi (container for mjpeg frames)
-OUTPUT_FILE_PATH = '/home/otaviosb/Desktop/arduino-nicla-vision-playground/recordings/video_recording.avi'
+# save an .avi (container for mjpeg frames) in recordings/ at the repo root
+OUTPUT_FILE_PATH = str(Path(__file__).resolve().parents[2] / 'recordings' / 'video_recording.avi')
 
 MQTT_HOST = 'localhost'
 MQTT_PORT = 1883
