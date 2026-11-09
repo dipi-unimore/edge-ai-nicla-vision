@@ -8,6 +8,10 @@ Intelligence is developed in two phases: on the desktop (YOLOv8n/OpenCV for vide
 
 Video runs on the desktop with OpenCV and YOLOv8n, chosen for its small size. The demo _yolo_detector.py_ in `host/vision/` does object detection with bounding boxes, labels and confidence scores.
 
+```bash
+python3 host/vision/yolo_detector.py
+```
+
 ### Custom classes: blue and red soda caps
 
 The stock YOLOv8n only knows 80 COCO classes. To detect a **blue cap** and a **red cap**, it was fine-tuned (transfer learning) on a custom dataset. The COCO classes are dropped; the model detects only the two caps.
@@ -77,6 +81,10 @@ Before the negatives, 28 of 293 training images had no cap. The same dataset tra
 ## Audio
 
 Audio is in development. _mel_spectrogram.py_ (in `host/audio/`) records audio with sounddevice and plots melspectrograms with librosa.
+
+```bash
+python3 host/audio/mel_spectrogram.py
+```
 
 <!-- ! 📸 IMAGEs: example melspectrograms of 2-3 different spoken keywords side by side -->
 

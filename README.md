@@ -1,6 +1,6 @@
 # Edge AI on the Arduino Nicla Vision
 
-> Audio and vision intelligence for IoT: object detection and keyword spotting on the Nicla Vision board.
+> Offline soda-cap detection on the Nicla Vision, with a live PC viewer.
 
 <p align="center">
     <img height="80" alt="UNIMORE Logo" src="./assets/logo_bianco.svg"/>
@@ -8,65 +8,48 @@
     <img height="80" alt="DIPI Logo" src="./assets/dipi.png"/>
 </p>
 
-**Status:** working on the port of the FOMO model to the Nicla Vision board.
+**Status:** FOMO detection of blue and red caps runs on the board, with no network needed. Keyword spotting is in development.
 
-<!-- ! add a GIF here showing the board doing object vision -->
+<p align="center">
+    <!-- 📸 GIF: fomo_viewer window showing boxes and centroids from the board -->
+</p>
+
+**Quick links:** [Board demo: detection on the Nicla](docs/board-fomo.md) · [Documentation](#documentation) · [Project structure](#project-structure)
 
 ## Table of Contents
 
-- [Current status](#current-status)
-- [Roadmap](#roadmap)
+- [Project structure](#project-structure)
+- [Status](#status)
 - [Documentation](#documentation)
-- [How to run the demos](#how-to-run-the-demos)
+- [Run the demos](#run-the-demos)
 - [Authorship](#authorship)
 
-## Structure of the project
+## Project structure
 
 ```text
-nicla-vision-anomaly-detection/
-├── board/                  # MicroPython, runs on the Nicla (deployed via OpenMV IDE)
-│   ├── examples/           # sensor and MQTT basics
-│   ├── streaming/          # camera and microphone streamers
-│   ├── vision/             # [planned] on-board inference (TinyML)
-│   └── audio/              # [planned] on-board keyword spotting
-├── host/                   # CPython, runs on the PC
-│   ├── receivers/          # MQTT subscribers that save video/audio
-│   ├── vision/             # YOLOv8n object detection
-│   └── audio/              # [planned] melspectrogram and keyword spotting
-├── models/                 # [planned] trained/downloaded weights
-├── tools/                  # helper scripts
-├── recordings/             # output of the receivers (gitignored)
+arduino-nicla-vision-playground/
+├── board/
+│   ├── fomo_live/          # Arduino C++: FOMO inference, streams results and frames to the PC
+│   ├── streaming/          # MicroPython: camera and microphone streamers (run from OpenMV IDE)
+│   └── examples/           # MicroPython: sensor and MQTT basics
+├── host/
+│   ├── vision/             # PC: YOLOv8n webcam demo and FOMO live viewer
+│   ├── audio/              # PC: melspectrogram and keyword spotting (in progress)
+│   └── receivers/          # PC: MQTT receivers that save video and audio
+├── models/                 # trained weights and board firmware
+├── tools/                  # dataset preparation and training scripts
 ├── docs/                   # detailed documentation
-└── assets/                 # images and GIFs for the docs
+├── assets/                 # images and GIFs for the docs
+└── recordings/             # receiver output (gitignored)
 ```
 
-## Roadmap
+## Status
 
-```mermaid
-flowchart LR
-    F["Foundations<br/>MQTT + sensor streaming"]:::done
-
-    subgraph V ["Vision pipeline"]
-        V1["Vision prototype<br/>YOLOv8n on desktop"]:::done --> V2["Detector refinement<br/>new features"]:::active --> V3["On-board vision<br/>export + inference on Nicla"]:::planned
-    end
-
-    subgraph A ["Audio pipeline"]
-        A1["Audio prototype<br/>recording + melspectrogram"]:::done --> A2["Keyword spotting<br/>model training"]:::planned --> A3["On-board audio<br/>inference on Nicla"]:::planned
-    end
-
-    G["Anomaly detection<br/>vision + audio on board"]:::planned
-
-    F --> V1
-    F --> A1
-    V3 --> G
-    A3 --> G
-
-    classDef done fill:#1f6feb,color:#fff,stroke:#1f6feb
-    classDef active fill:#f0883e,color:#fff,stroke:#f0883e
-    classDef planned fill:#21262d,color:#c9d1d9,stroke:#6e7681
-```
-
-<sub>Solid blue: completed · Orange: in development · Dashed: planned</sub>
+- **Done:** MQTT and sensor streaming
+- **Done:** desktop vision prototype, YOLOv8n trained on blue and red caps
+- **Done:** on-board vision, FOMO model running offline on the Nicla Vision
+- **In progress:** keyword-spotting model
+- **Planned:** on-board audio inference, then anomaly detection using vision and audio on the board
 
 <p align="center">
     <img height="450px" alt="Original project sketch" src="./assets/sketch.jpeg"/>
@@ -75,71 +58,58 @@ flowchart LR
 
 ## Documentation
 
-Each phase of the project is documented in detail on its own page:
+| Phase                                      | Description                                                                                                 |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| [Connectivity](docs/connectivity.md)       | Board and PC talk over MQTT, with a local Mosquitto broker or an external one                               |
+| [Sensors and streaming](docs/streaming.md) | Camera and microphone are streamed to the PC and saved as MJPEG video and WAV audio                         |
+| [Intelligence](docs/intelligence.md)       | YOLOv8n on the PC: blue and red caps, mAP50 0.94 on test. Also the training data and the desktop baseline   |
+| [On-board detection](docs/board-fomo.md)   | FOMO runs offline on the Nicla: 94% blue and 84% red recall on validation, live boxes and centroids on a PC |
 
-| Phase                 | Description                                                 | Doc                                          |
-| --------------------- | ----------------------------------------------------------- | -------------------------------------------- |
-| Connectivity          | MQTT architecture, local and external brokers               | [docs/connectivity.md](docs/connectivity.md) |
-| Sensors and streaming | Camera and microphone recording and streaming               | [docs/streaming.md](docs/streaming.md)       |
-| Intelligence          | YOLOv8n object detection, melspectrograms, keyword spotting | [docs/intelligence.md](docs/intelligence.md) |
+## Run the demos
 
-## How to run the demos
+### Board: offline FOMO detection
 
-From root folder:
+Runs the FOMO model on the Nicla Vision with no network, and shows boxes and centroids in a PC window. Details, model numbers, and limitations are in [docs/board-fomo.md](docs/board-fomo.md).
 
-1. **Initialize the virtual environment:**
+**Needs:** Nicla Vision on USB, [arduino-cli](https://arduino.github.io/arduino-cli/) (or the Arduino IDE), and the Edge Impulse Arduino library for this model (Deployment → Arduino library in Edge Impulse). Install the library zip in the Arduino IDE (Sketch → Include Library → Add .ZIP Library).
+
+1. **Flash the sketch** (replaces the Edge Impulse firmware on the board):
 
    ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate
+   arduino-cli compile --fqbn arduino:mbed_nicla:nicla_vision board/fomo_live
+   arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:mbed_nicla:nicla_vision board/fomo_live
    ```
 
-2. **Install dependencies:**
+2. **Start the viewer** (after the Python setup below):
+
    ```bash
-   pip install -r host/requirements.txt
+   python3 host/vision/fomo_viewer.py --port /dev/ttyACM0
    ```
 
-### `yolo_detector.py`
+   Press `q` in the window to quit.
 
-Captures video from your webcam and runs YOLOv8n object detection on each frame, drawing bounding boxes around detected objects.
+> [!NOTE]
+> To go back to the original Edge Impulse firmware, run `flash_linux.sh` (or the Windows/Mac script) in `models/nicla-vision-caps-detection-nicla-vision-v1-impulse-#1/`.
 
-```bash
-python3 host/vision/yolo_detector.py
-```
+### Python setup
 
-### `mel_spectrogram.py`
-
-Records audio from your device and plots a melspectrogram based on the acquired audio.
+From the root folder:
 
 ```bash
-python3 host/audio/mel_spectrogram.py
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r host/requirements.txt
 ```
 
-### `mjpeg_creator.py`
+For the board viewer only, `pip install opencv-python numpy pyserial` is enough.
 
-Receives video frames via MQTT from the Nicla Vision board and saves them as an AVI video file. Requires an active MQTT broker and a board streaming camera data.
+### Other demos
 
-> [!IMPORTANT]
-> Make sure the board is running `camera_streamer.py` and publishing video frames to the MQTT topic.
+The older desktop and streaming demos are documented with their docs:
 
-```bash
-python3 host/receivers/mjpeg_creator.py
-```
-
-The recorded video will be saved to `recordings/video_recording.avi`.
-
-### `wav_creator.py`
-
-Receives audio data via MQTT from the Nicla Vision board and saves it as a WAV audio file. Requires an active MQTT broker and a board streaming audio data.
-
-> [!IMPORTANT]
-> Make sure the board is running `microphone_streamer.py` and publishing audio data to the MQTT topic.
-
-```bash
-python3 host/receivers/wav_creator.py
-```
-
-The recorded audio will be saved to `record_and_stream/recordings/recording.wav`.
+- YOLOv8n webcam detection (`host/vision/yolo_detector.py`): [docs/intelligence.md](docs/intelligence.md)
+- Melspectrogram (`host/audio/mel_spectrogram.py`): [docs/intelligence.md#audio](docs/intelligence.md#audio)
+- MQTT receivers that save video and audio (`host/receivers/`): [docs/streaming.md](docs/streaming.md)
 
 ## Authorship
 
