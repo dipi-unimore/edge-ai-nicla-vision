@@ -8,8 +8,6 @@
     <img height="80" alt="DIPI Logo" src="./assets/dipi.png"/>
 </p>
 
-**Status:** FOMO detection of blue and red caps runs on the board, with no network needed. Keyword spotting is in development.
-
 <p align="center">
     <img src="./assets/nicla-detections.gif" width="600"/>
     <br/><em>Live detection of the blue and red caps</em>
@@ -43,14 +41,6 @@ arduino-nicla-vision-playground/
 ├── assets/                 # images and GIFs for the docs
 └── recordings/             # receiver output (gitignored)
 ```
-
-## Status
-
-- **Done:** MQTT and sensor streaming
-- **Done:** desktop vision prototype, YOLOv8n trained on blue and red caps
-- **Done:** on-board vision, FOMO model running offline on the Nicla Vision
-- **In progress:** keyword-spotting model
-- **Planned:** on-board audio inference, then anomaly detection using vision and audio on the board
 
 <p align="center">
     <img height="450px" alt="Original project sketch" src="./assets/sketch.jpeg"/>
