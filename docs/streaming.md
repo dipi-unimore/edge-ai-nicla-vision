@@ -17,4 +17,12 @@ The other aims to capture such data through the broker connection and save that 
 
 ## Running the receivers
 
-See [How to run the demos](../README.md#how-to-run-the-demos) for `mjpeg_creator.py` and `wav_creator.py`.
+Both receivers need the board streaming and an MQTT broker running. Run them from the repo root.
+
+```bash
+python3 host/receivers/mjpeg_creator.py   # saves recordings/video_recording.avi
+python3 host/receivers/wav_creator.py     # saves recordings/recording.wav
+```
+
+> [!IMPORTANT]
+> Make sure the board is running `camera_streamer.py` (video) or `microphone_streamer.py` (audio) and publishing to the MQTT topic.

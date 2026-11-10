@@ -3,9 +3,11 @@ import wave  # for writing .wav files
 import threading 
 import os  # for filesystem problms
 import sys
+from pathlib import Path
 import paho.mqtt.client as mqtt
 
-OUTPUT_FILE_PATH = '/home/otaviosb/Desktop/arduino-nicla-vision-playground/recordings/recording.wav'
+# saved in recordings/ at the repo root
+OUTPUT_FILE_PATH = str(Path(__file__).resolve().parents[2] / 'recordings' / 'recording.wav')
 MQTT_HOST = 'localhost'
 MQTT_PORT = 1883
 MQTT_TOPIC = 'openmv/raw-microphone-data'

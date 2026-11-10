@@ -3,6 +3,7 @@ ultralytics>=8.3
 torch>=2.12
 numpy>=2.1
 paho-mqtt>=2.1.0
+pyserial>=3.5
 
 # audio
 sounddevice>=0.5.3
