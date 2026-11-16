@@ -1,7 +1,5 @@
 # Edge AI on the Arduino Nicla Vision
 
-> Offline soda-cap detection on the Nicla Vision, with a live PC viewer.
-
 <p align="center">
     <img height="80" alt="UNIMORE Logo" src="./assets/logo_bianco.svg"/>
     &emsp;&emsp;
@@ -13,12 +11,13 @@
     <br/><em>Live detection of the blue and red caps</em>
 </p>
 
+This repository records the development of an Object Detection, Edge AI and IoT project by [Otávio Sbampato Andrade](https://github.com/otaviosbampato), supervised by Professor [Marco Picone](https://github.com/piconem) during an Erasmus+ mobility at UNIMORE. It follows a small camera-equipped board, the Arduino Nicla Vision, from streaming sensor data to a PC, to running a detection model directly on the microcontroller. Code, models, and notes for each step are kept here so the work can be reproduced and extended. The audio pipeline is paused and kept for future work.
+
 **Quick links:** [Board demo: detection on the Nicla](docs/board-fomo.md) · [Documentation](#documentation) · [Project structure](#project-structure)
 
 ## Table of Contents
 
 - [Project structure](#project-structure)
-- [Status](#status)
 - [Documentation](#documentation)
 - [Run the demos](#run-the-demos)
 - [Authorship](#authorship)
@@ -51,6 +50,7 @@ arduino-nicla-vision-playground/
 
 | Phase                                      | Description                                                                                                 |
 | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| [Development log](docs/development-log.md) | **Step-by-step history of the project, the references used, and notes for new contributors**                |
 | [Connectivity](docs/connectivity.md)       | Board and PC talk over MQTT, with a local Mosquitto broker or an external one                               |
 | [Sensors and streaming](docs/streaming.md) | Camera and microphone are streamed to the PC and saved as MJPEG video and WAV audio                         |
 | [Intelligence](docs/intelligence.md)       | YOLOv8n on the PC: blue and red caps, mAP50 0.94 on test. Also the training data and the desktop baseline   |
@@ -103,6 +103,11 @@ The older desktop and streaming demos are documented with their docs:
 - MQTT receivers that save video and audio (`host/receivers/`): [docs/streaming.md](docs/streaming.md)
 
 ## Authorship
+
+<p align="center">
+    <img src="./assets/authors.jpeg" width="600"/>
+    <br/><em>Last meeting for the project</em>
+</p>
 
 - Development: [Otávio Sbampato Andrade](https://github.com/otaviosbampato)
 - Advisor: [Marco Picone](https://github.com/piconem)
