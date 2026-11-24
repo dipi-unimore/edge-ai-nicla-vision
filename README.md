@@ -1,10 +1,10 @@
 # Edge AI on the Arduino Nicla Vision
 
-<p align="center">
-    <img height="80" alt="UNIMORE Logo" src="./assets/logo_bianco.svg"/>
+<!-- <p align="center">
+    <img height="80" alt="UNIMORE Logo" src="./assets/logo_unimore_bg.png"/>
     &emsp;&emsp;
     <img height="80" alt="DIPI Logo" src="./assets/dipi.png"/>
-</p>
+</p> -->
 
 <p align="center">
     <img src="./assets/nicla-detections.gif" width="600"/>
