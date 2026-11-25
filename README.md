@@ -1,26 +1,23 @@
 # Edge AI on the Arduino Nicla Vision
 
-> Offline soda-cap detection on the Nicla Vision, with a live PC viewer.
-
-<p align="center">
-    <img height="80" alt="UNIMORE Logo" src="./assets/logo_bianco.svg"/>
+<!-- <p align="center">
+    <img height="80" alt="UNIMORE Logo" src="./assets/logo_unimore_bg.png"/>
     &emsp;&emsp;
     <img height="80" alt="DIPI Logo" src="./assets/dipi.png"/>
-</p>
-
-**Status:** FOMO detection of blue and red caps runs on the board, with no network needed. Keyword spotting is in development.
+</p> -->
 
 <p align="center">
     <img src="./assets/nicla-detections.gif" width="600"/>
     <br/><em>Live detection of the blue and red caps</em>
 </p>
 
+This repository records the development of an Object Detection, Edge AI and IoT project by [Otávio Sbampato Andrade](https://github.com/otaviosbampato), supervised by Professor [Marco Picone](https://github.com/piconem) during an Erasmus+ mobility at UNIMORE. It follows a small camera-equipped board, the Arduino Nicla Vision, from streaming sensor data to a PC, to running a detection model directly on the microcontroller. Code, models, and notes for each step are kept here so the work can be reproduced and extended. The audio pipeline is paused and kept for future work.
+
 **Quick links:** [Board demo: detection on the Nicla](docs/board-fomo.md) · [Documentation](#documentation) · [Project structure](#project-structure)
 
 ## Table of Contents
 
 - [Project structure](#project-structure)
-- [Status](#status)
 - [Documentation](#documentation)
 - [Run the demos](#run-the-demos)
 - [Authorship](#authorship)
@@ -44,14 +41,6 @@ arduino-nicla-vision-playground/
 └── recordings/             # receiver output (gitignored)
 ```
 
-## Status
-
-- **Done:** MQTT and sensor streaming
-- **Done:** desktop vision prototype, YOLOv8n trained on blue and red caps
-- **Done:** on-board vision, FOMO model running offline on the Nicla Vision
-- **In progress:** keyword-spotting model
-- **Planned:** on-board audio inference, then anomaly detection using vision and audio on the board
-
 <p align="center">
     <img height="450px" alt="Original project sketch" src="./assets/sketch.jpeg"/>
     <br/><em>Project's initial concept</em>
@@ -61,6 +50,7 @@ arduino-nicla-vision-playground/
 
 | Phase                                      | Description                                                                                                 |
 | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| [Development log](docs/development-log.md) | **Step-by-step history of the project, the references used, and notes for new contributors**                |
 | [Connectivity](docs/connectivity.md)       | Board and PC talk over MQTT, with a local Mosquitto broker or an external one                               |
 | [Sensors and streaming](docs/streaming.md) | Camera and microphone are streamed to the PC and saved as MJPEG video and WAV audio                         |
 | [Intelligence](docs/intelligence.md)       | YOLOv8n on the PC: blue and red caps, mAP50 0.94 on test. Also the training data and the desktop baseline   |
@@ -113,6 +103,11 @@ The older desktop and streaming demos are documented with their docs:
 - MQTT receivers that save video and audio (`host/receivers/`): [docs/streaming.md](docs/streaming.md)
 
 ## Authorship
+
+<p align="center">
+    <img src="./assets/authors.jpeg" width="600"/>
+    <br/><em>Last meeting for the project</em>
+</p>
 
 - Development: [Otávio Sbampato Andrade](https://github.com/otaviosbampato)
 - Advisor: [Marco Picone](https://github.com/piconem)
